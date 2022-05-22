@@ -1,5 +1,6 @@
 package com.shop.productservice.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -19,7 +20,9 @@ public class Product {
     private String[] color;
     private double price;
     private boolean inStock;
+    @JsonIgnore
     private Date createdAt;
+    @JsonIgnore
     private Date updatedAt;
 
     public Product(String id, String title, String desc, String img, String[] categories, String[] size, String[] color, double price, boolean inStock, Date createdAt, Date updatedAt) {
