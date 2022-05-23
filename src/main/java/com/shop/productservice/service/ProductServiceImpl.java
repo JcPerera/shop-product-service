@@ -1,5 +1,7 @@
 package com.shop.productservice.service;
 
+import com.shop.productservice.dto.ProductDTO;
+import com.shop.productservice.mapper.ProductMapper;
 import com.shop.productservice.model.Product;
 import com.shop.productservice.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,21 +18,28 @@ public class ProductServiceImpl implements ProductService{
     @Autowired
     ProductRepository productRepository;
 
+    @Autowired
+    ProductMapper productMapper;
+
     @Override
-    public List<Product> getAllProducts() {
-        return productRepository.findAll();
+    public List<ProductDTO> getAllProducts() {
+        List<Product> products = productRepository.findAll();
+        return productMapper.productListToProductDtoList(products);
     }
 
     @Override
-    public Product getProduct(String productId) {
-        return productRepository.findById(productId).orElse(null);
+    public ProductDTO getProduct(String productId) {
+        Product product = productRepository.findById(productId).orElse(null);
+        return productMapper.productToProductDto(product);
     }
 
     @Override
-    public Product createProduct(Product product) {
+    public ProductDTO createProduct(ProductDTO productDTO) {
+        Product product = productMapper.ProductDtoToProduct(productDTO);
         product.setCreatedAt(new Date());
         product.setUpdatedAt(new Date());
-        return productRepository.save(product);
+        Product savedProduct = productRepository.save(product);
+        return productMapper.productToProductDto(savedProduct);
     }
 
     @Override
@@ -39,20 +48,14 @@ public class ProductServiceImpl implements ProductService{
     }
 
     @Override
-    public Product updateProduct(Product product) {
-        Product oldProduct = productRepository.findById(product.getId()).orElse(null);
-        if(oldProduct != null){
-            oldProduct.setTitle(product.getTitle());
-            oldProduct.setDesc(product.getDesc());
-            oldProduct.setImg(product.getImg());
-            oldProduct.setCategories(product.getCategories());
-            oldProduct.setSize(product.getSize());
-            oldProduct.setColor(product.getColor());
-            oldProduct.setPrice(product.getPrice());
-            oldProduct.setInStock(product.isInStock());
-            oldProduct.setUpdatedAt(new Date());
-            productRepository.save(product);
+    public ProductDTO updateProduct(ProductDTO productDTO) {
+        Product product = productRepository.findById(productDTO.getId()).orElse(null);
+        ProductDTO updatedDto = null;
+        if(product != null){
+            product = productMapper.ProductDtoToProduct(productDTO);
+            Product updatedProduct = productRepository.save(product);
+            updatedDto = productMapper.productToProductDto(updatedProduct);
         }
-        return product;
+        return updatedDto;
     }
 }

@@ -1,6 +1,6 @@
 package com.shop.productservice.controller;
 
-import com.shop.productservice.model.Product;
+import com.shop.productservice.dto.ProductDTO;
 import com.shop.productservice.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -15,17 +15,17 @@ public class ProductController {
     private ProductService productService;
 
     @GetMapping("/product")
-    public ResponseEntity<List<Product>> getProducts() {
+    public ResponseEntity<List<ProductDTO>> getProducts() {
         return ResponseEntity.ok(productService.getAllProducts());
     }
 
     @PostMapping("/product")
-    public ResponseEntity<Product> createProduct(@RequestBody Product product){
+    public ResponseEntity<ProductDTO> createProduct(@RequestBody ProductDTO product){
         return ResponseEntity.ok(productService.createProduct(product));
     }
 
     @GetMapping("/product/{productId}")
-    public ResponseEntity<Product> getProduct(@PathVariable(value = "productId") String productId) {
+    public ResponseEntity<ProductDTO> getProduct(@PathVariable(value = "productId") String productId) {
         return ResponseEntity.ok(productService.getProduct(productId));
     }
 
@@ -36,7 +36,7 @@ public class ProductController {
     }
 
     @PutMapping("/product/{productId}")
-    public ResponseEntity<Product> updateProduct(@PathVariable(value = "productId") String productId, @RequestBody Product product){
+    public ResponseEntity<ProductDTO> updateProduct(@PathVariable(value = "productId") String productId, @RequestBody ProductDTO product){
         product.setId(productId);
         return ResponseEntity.ok(productService.updateProduct(product));
     }
