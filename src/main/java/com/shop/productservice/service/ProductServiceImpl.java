@@ -53,6 +53,7 @@ public class ProductServiceImpl implements ProductService{
         ProductDTO updatedDto = null;
         if(product != null){
             product = productMapper.ProductDtoToProduct(productDTO);
+            product.setUpdatedAt(new Date());
             Product updatedProduct = productRepository.save(product);
             updatedDto = productMapper.productToProductDto(updatedProduct);
         }
